@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 5000;
+
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors=require('cors')
@@ -10,7 +10,7 @@ const userMiddleware=require('./middlewares/userMiddleware')
 require('dotenv').config(); 
 app.use(bodyParser.json());
 
-
+const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/milk",userMiddleware.userMiddleware,  milkRouter)
