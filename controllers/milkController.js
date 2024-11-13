@@ -128,7 +128,7 @@ const getMilkPurchaseAmountToday=async(req,res)=>{
 
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 2);
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
         startOfMonth.setUTCHours(0, 0, 0, 0);
         const purchases = await Purchase.find({
             User: user._id,
@@ -158,10 +158,10 @@ const getAllMissedDates=async(req,res)=>{
             return res.status(400).send({ msg: "User not found" });
         }
 
-        const today = new Date();
+        const today = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
         today.setUTCHours(0, 0, 0, 0);
 
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 2);
+        const startOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 0));
         
         startOfMonth.setUTCHours(0, 0, 0, 0);
 
@@ -201,13 +201,13 @@ const getMissedDatesOfThatMonth=async(req,res)=>{
 
         const month = parseInt(req.params.month) - 1;
         const year = parseInt(req.params.year);
-        const startOfMonth = new Date(year, month, 2);
+        const startOfMonth = new Date(Date.UTC(year, month, 0));
         startOfMonth.setUTCHours(0, 0, 0, 0);
         let endOfTheMonth;
-        if(Number(req.params.month)===new Date().getMonth()+1){
+        if(Number(req.params.month)===new Date().getMonth()+1 && Number(req.params.year)===new Date().getFullYear()){
             endOfTheMonth=new Date();
         }else{
-            endOfTheMonth = new Date(year, month + 1, 1);
+            endOfTheMonth = new Date(year, month + 1, 0);
         }
         // endOfTheMonth = new Date(year, month + 1, 1);
         endOfTheMonth.setUTCHours(0, 0, 0, 0);
@@ -221,7 +221,7 @@ const getMissedDatesOfThatMonth=async(req,res)=>{
 
         const dates = purchases.map(purchase => purchase.purchaseDate);
         const allDates = [];
-        for (let date = new Date(startOfMonth); date <= endOfTheMonth; date.setDate(date.getDate() + 1)) {
+        for (let date = new Date(startOfMonth); date < endOfTheMonth; date.setDate(date.getDate() + 1)) {
             date.setUTCHours(0, 0, 0, 0);
             if (!dates.some(d => d.getTime() === date.getTime())) {
                 allDates.push(new Date(date));
@@ -243,7 +243,7 @@ const getPriceOfThatMonth=async(req,res)=>{
 
         const month = parseInt(req.params.month) - 1;
         const year = parseInt(req.params.year);
-        const startOfMonth = new Date(year, month, 2);
+        const startOfMonth = new Date(year, month, 0);
         startOfMonth.setUTCHours(0, 0, 0, 0);
         const endOfTheMonth = new Date(year, month + 1, 1);
         endOfTheMonth.setUTCHours(0, 0, 0, 0);
